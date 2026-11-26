@@ -1,7 +1,7 @@
 {
     "name": "n8n-nodes-adapterspot",
-    "version": "0.1.1",
-    "description": "n8n node for the AdapterSpot Power Supply Identifier API: read a power adapter label from a photo and find the power supply that fits.",
+    "version": "0.2.0",
+    "description": "n8n node for the Power Adapter Label Reader API: read a power adapter label from a photo and get the requirements for a replacement power supply.",
     "license": "MIT",
     "homepage": "https://adapterspot.com/en/api/",
     "keywords": [

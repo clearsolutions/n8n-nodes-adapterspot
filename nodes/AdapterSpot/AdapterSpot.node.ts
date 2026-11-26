@@ -23,7 +23,7 @@ export class AdapterSpot implements INodeType {
 		version: [1],
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
 		description:
-			'Read a power adapter label from a photo and find the power supply that fits, with the AdapterSpot API',
+			'Read a power adapter label from a photo and get the requirements for a replacement power supply',
 		defaults: {
 			name: 'AdapterSpot',
 		},
@@ -74,10 +74,10 @@ export class AdapterSpot implements INodeType {
 				displayOptions: { show: { resource: ['powerSupply'] } },
 				options: [
 					{
-						name: 'Find',
+						name: 'Get Requirements',
 						value: 'find',
-						description: 'Find the power supply that fits given voltage, current or power',
-						action: 'Find a power supply',
+						description: 'Get the requirements for a replacement power supply from voltage, current or power',
+						action: 'Get power supply requirements',
 					},
 				],
 				default: 'find',
@@ -92,7 +92,7 @@ export class AdapterSpot implements INodeType {
 					{
 						name: 'Get Many',
 						value: 'getAll',
-						description: 'List the connector types in the AdapterSpot connector library',
+						description: 'List the connector types the API recognises',
 						action: 'Get many connectors',
 					},
 				],
@@ -148,10 +148,11 @@ export class AdapterSpot implements INodeType {
 						type: 'options',
 						default: 'b21',
 						options: [
-							{ name: '4-Pin DIN', value: 'din4' },
 							{ name: '3.5 × 1.35 Mm Barrel', value: 'b35' },
+							{ name: '4-Pin DIN', value: 'din4' },
 							{ name: '5.5 × 2.1 Mm Barrel', value: 'b21' },
 							{ name: '5.5 × 2.5 Mm Barrel', value: 'b25' },
+							{ name: 'USB-C (Power Delivery)', value: 'usbc' },
 						],
 					},
 					{
@@ -172,14 +173,14 @@ export class AdapterSpot implements INodeType {
 				type: 'collection',
 				placeholder: 'Add Option',
 				default: {},
-				displayOptions: { show: { resource: ['label', 'powerSupply'] } },
+				displayOptions: { show: { resource: ['label'] } },
 				options: [
 					{
 						displayName: 'Language',
 						name: 'lang',
 						type: 'options',
 						default: 'en',
-						description: 'Language of the note and the product links',
+						description: 'Language of the note',
 						options: [
 							{ name: 'Dutch', value: 'nl' },
 							{ name: 'English', value: 'en' },
@@ -234,9 +235,7 @@ export class AdapterSpot implements INodeType {
 						);
 					}
 					Object.assign(qs, this.getNodeParameter('additionalFields', i, {}) as IDataObject);
-					const options = this.getNodeParameter('options', i, {}) as IDataObject;
-					if (options.lang) qs.lang = options.lang;
-					request = { method: 'GET', url: `${BASE_URL}/v1/power-supply`, qs, json: true };
+					request = { method: 'GET', url: `${BASE_URL}/v1/requirements`, qs, json: true };
 				} else if (resource === 'connector' && operation === 'getAll') {
 					request = { method: 'GET', url: `${BASE_URL}/v1/connectors`, json: true };
 				} else {
